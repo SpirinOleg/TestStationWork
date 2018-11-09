@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.a123.teststation.MainFragment">
+
+        <EditText
+            android:id="@+id/departureStationAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/select_station_from"
+            android:inputType="textPersonName"
+            android:onClick="showStaionFrom"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="16dp"/>
+
+        <EditText
+            android:id="@+id/arrivalStationAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/select_station_to"
+            android:inputType="textPersonName"
+            android:onClick="showStaionTo"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="126dp"/>
+
+        <EditText
+            android:id="@+id/pickerdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/datepicker"
+            android:onClick="selectDate"/>
+
+
+</LinearLayout>

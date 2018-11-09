@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TestStation</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Тестовое задание</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Настройки</string>
+    <string name="about_copyright">Spirin Oleg. All right reserved (2018)</string>
+    <string name="select_station_from">Выбор станции отправления</string>
+    <string name="select_station_to">Выбор станции прибытия</string>
+    <string name="datepicker">Выбор даты</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_hint">Station title...</string>
+</resources>
