@@ -26,6 +26,7 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
         this.listener = listener;
     }
 
+
     @Override
     public TimingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
