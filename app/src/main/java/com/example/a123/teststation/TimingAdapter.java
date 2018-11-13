@@ -1,11 +1,14 @@
 package com.example.a123.teststation;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -19,6 +22,11 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
     private List<Station> stations;
     private List<Station> stationsFiltred;
     private OnItemRecyclerClick listener;
+
+    TimingAdapter(OnItemRecyclerClick listener){
+        this.listener = listener;
+
+    }
 
     TimingAdapter(List<Station> data, OnItemRecyclerClick listener){
         stations = data;
@@ -39,6 +47,10 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
         //Log.e(TAG, stationsFiltred.get(position).getStationTitle());
         holder.citiesName.setText(stationsFiltred.get(position).getStationTitle());
         holder.itemView.setOnClickListener(view -> listener.onClick(position, stationsFiltred.get(position)));
+
+
+        holder.infoStation.setOnClickListener(view -> listener.onInfoClick(position, stations.get(position)));
+
     }
 
     @Override
@@ -79,10 +91,13 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView citiesName;
+        private ImageButton infoStation;
 
         public ViewHolder(View itemView) {
         super(itemView);
             citiesName = (TextView) itemView.findViewById(R.id.stationName);
+            infoStation = itemView.findViewById(R.id.image_info_station);
         }
+
     }
 }

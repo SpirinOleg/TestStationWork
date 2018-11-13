@@ -77,7 +77,6 @@ public class MainFragment extends Fragment {
                     default:
                         break;
             }
-
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

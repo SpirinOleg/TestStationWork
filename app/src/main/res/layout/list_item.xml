@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -8,19 +9,16 @@
 
     <TextView
         android:id="@+id/stationName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"/>
+        android:layout_width="343dp"
+        android:layout_height="30dp"
+        tools:text="Station"
+        android:background="#FFFFFF" />
 
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.5dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:background="@color/colorDevider"/>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/stationTitle"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"/>-->
+    <ImageButton
+        android:id="@+id/image_info_station"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_action_name" />
 
 </LinearLayout>

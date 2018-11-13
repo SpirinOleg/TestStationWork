@@ -135,8 +135,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
     public static void recCityToDB(Context context, List<City> cities, int from) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE);
         preferences.edit().putBoolean(PREFERENCES_CITY_UPDATE, false).apply();
-        if(preferences.getBoolean(PREFERENCES_CITY_UPDATE, false))
-        {
+        if(preferences.getBoolean(PREFERENCES_CITY_UPDATE, false)) {
         preferences.edit().putBoolean(PREFERENCES_UPDATE, false).apply();
         DBHelper helper = new DBHelper(context);
         SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
@@ -195,6 +194,13 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
         finish();
     }
 
+    @Override
+    public void onInfoClick(int position, Station station) {
+        Intent intentInfo = new Intent(this, InfoActivity.class);
+        intentInfo.putExtra("INFOSTATION", station);
+        startActivity(intentInfo);
+    }
+
     public class StationAsyncTask extends AsyncTask<String, Integer, List<Station>> {
 
         @Override
@@ -246,7 +252,20 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
                     }
 
                     recStationToDB(getApplicationContext(), allstations);
+                    } else {
+                    CityTablo citiTablo = gson.fromJson(rd, CityTablo.class);
+                    List<City> cities;
+                    if (flag) {
+//                    Log.e(TAG, "getCitiesFrom" + citiTablo.getCitiesFrom().get(0).getStations().get(0).getStationTitle());
+                        cities = citiTablo.getCitiesFrom();
+                    } else {
+//                    Log.e(TAG, "getCitiesTo" + citiTablo.getCitiesTo().get(0).getStations().get(0).getStationTitle());
+                        cities = citiTablo.getCitiesTo();
                     }
+                    for (City city : cities) {
+                        allstations.addAll(city.getStations());
+                    }
+                        }
                 } catch(Exception e){
                     runOnUiThread(() -> toast("Ошибка импорта json"));
                 }
