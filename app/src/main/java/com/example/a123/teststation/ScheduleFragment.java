@@ -1,14 +1,11 @@
 package com.example.a123.teststation;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +13,18 @@ import android.widget.EditText;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MainFragment extends Fragment {
 
-    public static final String STATION_NAME = "stationName";
-    public static final String STATION_FILE = "station";
-    public static boolean DIRECTION_TYPE;
-    public static final String KEY = "booleanKey";
+public class ScheduleFragment extends Fragment {
+
+    public static int DIRECTION_TYPE = 1;
+    public static final String KEY = "DIRECTION_EXTRA";
     public static final int DIRECTION_DEP = 0;//отправление
     public static final int DIRECTION_ARR = 1;//прибытие
+    public static final String MSG = "";
 
-    EditText departureStation;
-    EditText arrivalStation;
+    private EditText departureStation;
+    private EditText arrivalStation;
+    private EditText datePicker;
 
 
     @Nullable
@@ -43,20 +41,28 @@ public class MainFragment extends Fragment {
 
          departureStation = view.findViewById(R.id.departureStationAddress);
          arrivalStation = view.findViewById(R.id.arrivalStationAddress);
+         datePicker = view.findViewById(R.id.pickerdate);
 
 
 
-        view.findViewById(R.id.departureStationAddress).setOnClickListener(new View.OnClickListener() {
+        departureStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showStaionFrom(view);//вызов метода для отображения данных для станций отправления
             }
         });
 
-        view.findViewById(R.id.arrivalStationAddress).setOnClickListener(new View.OnClickListener() {
+        arrivalStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showStaionTo(view);//вызов метода для отображения данных для станций прибытия
+            }
+        });
+
+        datePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDate(view);
             }
         });
 
@@ -65,57 +71,59 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if(requestCode == DIRECTION_TYPE ){
+//            if(resultCode == RESULT_OK){
+//                Station station = data.getParcelableExtra("STATION");
+//                departureStation.setText(station.getStationTitle());
+//            } else {
+//                Toast.makeText(getContext(), R.string.msg_error_dep, Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
+
+
         if(resultCode == RESULT_OK){
             Station station =  data.getParcelableExtra("STATION");
             switch (requestCode){
-                case DIRECTION_DEP:
+                case DIRECTION_DEP: {
                     departureStation.setText(station.getStationTitle());
                     break;
-                case DIRECTION_ARR:
+                }
+                case DIRECTION_ARR: {
                     arrivalStation.setText(station.getStationTitle());
                     break;
-                    default:
-                        break;
+                }
+
+                default:
+                    break;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+/*    private void showStation(View view){
+        Intent intent = new Intent(getActivity(),TimingActivity.class);
+        //intent.putExtra(KEY, DIRECTION_TYPE);
+        startActivityForResult(intent, DIRECTION_TYPE);
+    }*/
+
     private void showStaionFrom(View view){
-        Intent intent = new Intent(getActivity(),TimingFragment.class);
-        intent.putExtra(KEY, DIRECTION_TYPE);
+        Intent intent = new Intent(getActivity(),TimingActivity.class);
+        intent.putExtra(KEY, DIRECTION_DEP);
         startActivityForResult(intent, DIRECTION_DEP);
 
-/*
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("flag", true);
-
-        Activity timingFragment = new TimingFragment();
-        timingFragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainContainer, timingFragment);
-
-        transaction.addToBackStack(null);
-        transaction.commit();*/
     }
 
     private void showStaionTo(View view){
-        Intent intent = new Intent(getActivity(),TimingFragment.class);
-        intent.putExtra(KEY, DIRECTION_TYPE);
+        Intent intent = new Intent(getActivity(),TimingActivity.class);
+        intent.putExtra(KEY, DIRECTION_ARR);
         startActivityForResult(intent, DIRECTION_ARR);
 
-/*        Bundle bundle = new Bundle();
-        bundle.putBoolean("flag", false);
-
-        Activity timingFragment = new TimingFragment();
-        timingFragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainContainer, timingFragment);
-
-        transaction.addToBackStack(null);
-        transaction.commit();*/
     }
 
-
+    public void selectDate(View view) {
+        DialogFragment dateDialog = new DatePickerFragment();
+        dateDialog.show(getFragmentManager(), "datePicker");
+    }
 
 }

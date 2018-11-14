@@ -1,6 +1,5 @@
 package com.example.a123.teststation;
 
-import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +20,7 @@ public class AboutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        TextView tvInfo = (TextView) view.findViewById(R.id.about_fragment);
-        tvInfo.setText("Версия приложения: " + BuildConfig.VERSION_NAME);
+        TextView tvInfo = view.findViewById(R.id.about_fragment);
+        tvInfo.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME));
     }
 }

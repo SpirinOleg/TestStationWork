@@ -15,7 +15,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,15 +27,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.example.a123.teststation.StationSchema.*;
 
 
-public class TimingFragment extends AppCompatActivity implements OnItemRecyclerClick {
+public class TimingActivity extends AppCompatActivity implements OnItemRecyclerClick {
 
-    private static final String TAG = TimingFragment.class.getSimpleName();
+    private static final String TAG = TimingActivity.class.getSimpleName();
     private TimingAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
@@ -48,7 +46,6 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
     public static final String PREFERENCES_CITY_UPDATE = "city_update";
     public static final String PREFERENCES_STATION_UPDATE = "station_update";
 
-    //Надо убрать после добавления БД
     private boolean flag; //переменная булевская для преключения между списком городов отправления и прибытия
 
     @Override
@@ -68,7 +65,15 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
                 layoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            int direction = bundle.getInt(ScheduleFragment.KEY,-1);
+            if (direction == ScheduleFragment.DIRECTION_DEP) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+        }
     }
 
     @Override
@@ -80,7 +85,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -100,7 +105,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.item_search){
+        if (id == R.id.item_search) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -108,7 +113,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
 
     @Override
     public void onBackPressed() {
-        if (!searchView.isIconified()){
+        if (!searchView.isIconified()) {
             searchView.setIconified(true);
             return;
         }
@@ -135,24 +140,24 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
     public static void recCityToDB(Context context, List<City> cities, int from) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE);
         preferences.edit().putBoolean(PREFERENCES_CITY_UPDATE, false).apply();
-        if(preferences.getBoolean(PREFERENCES_CITY_UPDATE, false)) {
-        preferences.edit().putBoolean(PREFERENCES_UPDATE, false).apply();
-        DBHelper helper = new DBHelper(context);
-        SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
-        sqLiteDatabase.execSQL("DELETE FROM " + CityTable.TABLE_NAME);
-        //int destination = from ? 0 : 1;
+        if (preferences.getBoolean(PREFERENCES_CITY_UPDATE, false)) {
+            preferences.edit().putBoolean(PREFERENCES_UPDATE, false).apply();
+            DBHelper helper = new DBHelper(context);
+            SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
+            sqLiteDatabase.execSQL("DELETE FROM " + CityTable.TABLE_NAME);
+            //int destination = from ? 0 : 1;
 
-        for (City city : cities) {
-            ContentValues values = new ContentValues();
-            values.put(CityTable.Cols.CITY_ID, city.getCityId());
-            values.put(CityTable.Cols.CITY_TITLE, city.getCityTitle());
-            values.put(CityTable.Cols.COUNTRY_TITLE, city.getCountryTitle());
-            values.put(CityTable.Cols.DIRECTION_TYPE, from);
-            sqLiteDatabase.insert(CityTable.TABLE_NAME, null, values);
-        }
-        sqLiteDatabase.close();
-        preferences.edit().putBoolean(PREFERENCES_UPDATE, true).apply();
-        preferences.edit().putBoolean(PREFERENCES_CITY_UPDATE, true).apply();
+            for (City city : cities) {
+                ContentValues values = new ContentValues();
+                values.put(CityTable.Cols.CITY_ID, city.getCityId());
+                values.put(CityTable.Cols.CITY_TITLE, city.getCityTitle());
+                values.put(CityTable.Cols.COUNTRY_TITLE, city.getCountryTitle());
+                values.put(CityTable.Cols.DIRECTION_TYPE, from);
+                sqLiteDatabase.insert(CityTable.TABLE_NAME, null, values);
+            }
+            sqLiteDatabase.close();
+            preferences.edit().putBoolean(PREFERENCES_UPDATE, true).apply();
+            preferences.edit().putBoolean(PREFERENCES_CITY_UPDATE, true).apply();
         } else {
             preferences.edit().putBoolean(PREFERENCES_CITY_UPDATE, true).apply();
         }
@@ -161,7 +166,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
     public static void recStationToDB(Context context, List<Station> stations) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE);
         preferences.getBoolean(PREFERENCES_STATION_UPDATE, false);
-        if(preferences.getBoolean(PREFERENCES_STATION_UPDATE, false)) {
+        if (preferences.getBoolean(PREFERENCES_STATION_UPDATE, false)) {
             preferences.edit().putBoolean(PREFERENCES_UPDATE, false).apply();
             DBHelper helper = new DBHelper(context);
             SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
@@ -187,7 +192,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
 
     @Override
     public void onClick(int position, Station station) {
-        //Log.d("TimingFragment", Integer.toString(station.getStationId()));
+        //Log.d("TimingActivity", Integer.toString(station.getStationId()));
         Intent intent = new Intent();
         intent.putExtra("STATION", station);
         setResult(RESULT_OK, intent);
@@ -195,7 +200,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
     }
 
     @Override
-    public void onInfoClick(int position, Station station) {
+    public void onInfoClick(Station station) {
         Intent intentInfo = new Intent(this, InfoActivity.class);
         intentInfo.putExtra("INFOSTATION", station);
         startActivity(intentInfo);
@@ -252,7 +257,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
                     }
 
                     recStationToDB(getApplicationContext(), allstations);
-                    } else {
+                } else {
                     CityTablo citiTablo = gson.fromJson(rd, CityTablo.class);
                     List<City> cities;
                     if (flag) {
@@ -265,11 +270,11 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
                     for (City city : cities) {
                         allstations.addAll(city.getStations());
                     }
-                        }
-                } catch(Exception e){
-                    runOnUiThread(() -> toast("Ошибка импорта json"));
                 }
-                return allstations;
+            } catch (Exception e) {
+                runOnUiThread(() -> toast("Ошибка импорта json"));
+            }
+            return allstations;
 
         }
 
@@ -284,7 +289,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
         protected void onPostExecute(List<Station> stations) {
             super.onPostExecute(stations);
             progressBar.setVisibility(View.INVISIBLE);
-            mAdapter = new TimingAdapter(stations, TimingFragment.this);
+            mAdapter = new TimingAdapter(stations, TimingActivity.this);
             mRecyclerView.setAdapter(mAdapter);
             //Log.e(TAG, "Задача завершена");
             toast("Задача завершена");
@@ -298,7 +303,7 @@ public class TimingFragment extends AppCompatActivity implements OnItemRecyclerC
         }
 
         private void toast(String message) {
-            Activity activity = TimingFragment.this;
+            Activity activity = TimingActivity.this;
             if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             }

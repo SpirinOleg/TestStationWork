@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_station_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_station_title" />
+
+    <TextView
+        android:id="@+id/txt_station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Station" />
+
+    <TextView
+        android:id="@+id/txt_city_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_city_title" />
+
+    <TextView
+        android:id="@+id/txt_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="City" />
+
+    <TextView
+        android:id="@+id/txt_district_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_district_title" />
+
+    <TextView
+        android:id="@+id/txt_district"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="District" />
+
+    <TextView
+        android:id="@+id/txt_country_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_country_title" />
+
+    <TextView
+        android:id="@+id/txt_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Country" />
+
+</LinearLayout>

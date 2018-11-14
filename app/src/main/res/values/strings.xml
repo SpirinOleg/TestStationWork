@@ -13,8 +13,11 @@
     <string name="info_city_title">Город</string>
     <string name="info_country_title">Страна</string>
     <string name="info_district_title">Район</string>
+    <string name="fragment_name">TimingFragment</string>
+    <string name="msg_error_dep">Нет станций отправления</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="search_hint">Station title...</string>
+    <string name="search_hint">Station title…</string>
+    <string name="app_version">Версия приложения: %s</string>
 </resources>

@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TimingFragment"
-            android:label="TimingFragment"
+            android:name=".TimingActivity"
+            android:label="@string/fragment_name"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.app.searchable"

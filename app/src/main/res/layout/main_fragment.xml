@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.a123.teststation.MainFragment">
+    tools:context="com.example.a123.teststation.ScheduleFragment">
 
         <EditText
             android:id="@+id/departureStationAddress"
@@ -37,8 +37,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:focusable="false"
-            android:hint="@string/datepicker"
-            android:onClick="selectDate"/>
+            android:hint="@string/datepicker"/>
 
 
 </LinearLayout>
