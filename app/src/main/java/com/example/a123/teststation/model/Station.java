@@ -1,4 +1,4 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,6 +7,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Station implements Parcelable {
 
+    public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+        @Override
+        public Station createFromParcel(Parcel source) {
+            return new Station(source);
+        }
+
+        @Override
+        public Station[] newArray(int size) {
+            return new Station[size];
+        }
+    };
     @SerializedName("countryTitle")
     private String countryTitle;
     @SerializedName("point")
@@ -23,6 +34,20 @@ public class Station implements Parcelable {
     private Integer stationId;
     @SerializedName("stationTitle")
     private String stationTitle;
+
+    public Station() {
+    }
+
+    protected Station(Parcel in) {
+        this.countryTitle = in.readString();
+        this.point = in.readParcelable(Point.class.getClassLoader());
+        this.districtTitle = in.readString();
+        this.cityId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.cityTitle = in.readString();
+        this.regionTitle = in.readString();
+        this.stationId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.stationTitle = in.readString();
+    }
 
     public String getCountryTitle() {
         return countryTitle;
@@ -104,30 +129,4 @@ public class Station implements Parcelable {
         dest.writeValue(this.stationId);
         dest.writeString(this.stationTitle);
     }
-
-    public Station() {
-    }
-
-    protected Station(Parcel in) {
-        this.countryTitle = in.readString();
-        this.point = in.readParcelable(Point.class.getClassLoader());
-        this.districtTitle = in.readString();
-        this.cityId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.cityTitle = in.readString();
-        this.regionTitle = in.readString();
-        this.stationId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.stationTitle = in.readString();
-    }
-
-    public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
-        @Override
-        public Station createFromParcel(Parcel source) {
-            return new Station(source);
-        }
-
-        @Override
-        public Station[] newArray(int size) {
-            return new Station[size];
-        }
-    };
 }

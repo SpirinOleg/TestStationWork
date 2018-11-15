@@ -1,11 +1,13 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
+import com.example.a123.teststation.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

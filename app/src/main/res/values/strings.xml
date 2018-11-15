@@ -14,10 +14,14 @@
     <string name="info_country_title">Страна</string>
     <string name="info_district_title">Район</string>
     <string name="fragment_name">TimingFragment</string>
-    <string name="msg_error_dep">Нет станций отправления</string>
+    <string name="msg_error_dep">Список станций пустой</string>
+    <string name="msg_error_json">Ошибка импорта json</string>
+    <string name="msg_task_complited">Задача завершена</string>
+    <string name="msg_task_canceled">Задача отменена</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_hint">Station title…</string>
     <string name="app_version">Версия приложения: %s</string>
+    <string name="imageInfoStation">Информация о станции</string>
 </resources>

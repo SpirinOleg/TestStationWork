@@ -1,31 +1,30 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.adapter;
 
 import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.example.a123.teststation.OnItemRecyclerClick;
+import com.example.a123.teststation.R;
+import com.example.a123.teststation.model.Station;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder> implements Filterable {
 
-    private static final String TAG = TimingActivity.class.getSimpleName();
     private List<Station> stations;
     private List<Station> stationsFiltred;
     private OnItemRecyclerClick listener;
 
-    TimingAdapter(OnItemRecyclerClick listener) {
-        this.listener = listener;
 
-    }
-
-    TimingAdapter(List<Station> data, OnItemRecyclerClick listener) {
+    public TimingAdapter(List<Station> data, OnItemRecyclerClick listener) {
         stations = data;
         stationsFiltred = data;
         this.listener = listener;
@@ -41,7 +40,6 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(TimingAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        //Log.e(TAG, stationsFiltred.get(position).getStationTitle());
         holder.citiesName.setText(stationsFiltred.get(position).getStationTitle());
         holder.itemView.setOnClickListener(view -> listener.onClick(position, stationsFiltred.get(position)));
 
@@ -52,7 +50,6 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        // Log.e(TAG, Integer.toString(stations.size()));
         return stationsFiltred.size();
     }
 
@@ -92,7 +89,7 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
-            citiesName = (TextView) itemView.findViewById(R.id.stationName);
+            citiesName = itemView.findViewById(R.id.stationName);
             infoStation = itemView.findViewById(R.id.image_info_station);
         }
 

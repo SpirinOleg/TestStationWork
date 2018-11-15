@@ -1,12 +1,30 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Point implements Parcelable {
+    public static final Parcelable.Creator<Point> CREATOR = new Parcelable.Creator<Point>() {
+        @Override
+        public Point createFromParcel(Parcel source) {
+            return new Point(source);
+        }
+
+        @Override
+        public Point[] newArray(int size) {
+            return new Point[size];
+        }
+    };
     private Double longitude;
     private Double latitude;
 
+    public Point() {
+    }
+
+    protected Point(Parcel in) {
+        this.longitude = (Double) in.readValue(Double.class.getClassLoader());
+        this.latitude = (Double) in.readValue(Double.class.getClassLoader());
+    }
 
     public Double getLongitude() {
         return longitude;
@@ -34,24 +52,4 @@ public class Point implements Parcelable {
         dest.writeValue(this.longitude);
         dest.writeValue(this.latitude);
     }
-
-    public Point() {
-    }
-
-    protected Point(Parcel in) {
-        this.longitude = (Double) in.readValue(Double.class.getClassLoader());
-        this.latitude = (Double) in.readValue(Double.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<Point> CREATOR = new Parcelable.Creator<Point>() {
-        @Override
-        public Point createFromParcel(Parcel source) {
-            return new Point(source);
-        }
-
-        @Override
-        public Point[] newArray(int size) {
-            return new Point[size];
-        }
-    };
 }

@@ -1,4 +1,4 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.database;
 
 
 import android.provider.BaseColumns;
@@ -30,14 +30,4 @@ public class StationSchema implements BaseColumns {
             public static final String DIRECTION_TYPE = "direction_type";
         }
     }
-
-/*    public static final class DirectionTable {
-        public static final String TABLE_NAME = "citydirection";
-
-        public static final class Cols {
-            public static final String CITY_ID = "city_id";
-            public static final String STATION_ID = "station_id";
-            public static final String DIRECTION_TYPE = "direction_type";
-        }
-    }*/
 }

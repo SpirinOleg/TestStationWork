@@ -1,6 +1,7 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.model;
 
 import android.graphics.Point;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

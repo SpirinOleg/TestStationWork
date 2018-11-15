@@ -9,16 +9,17 @@
 
     <TextView
         android:id="@+id/stationName"
-        android:layout_width="343dp"
-        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         tools:text="Station"
         android:background="#FFFFFF" />
 
     <ImageButton
         android:id="@+id/image_info_station"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:padding="2dp"
-        android:src="@drawable/ic_action_name" />
+        android:src="@drawable/ic_action_name"
+        android:contentDescription="@string/imageInfoStation" />
 
 </LinearLayout>

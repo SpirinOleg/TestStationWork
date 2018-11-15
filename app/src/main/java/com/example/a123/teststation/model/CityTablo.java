@@ -1,4 +1,6 @@
-package com.example.a123.teststation;
+package com.example.a123.teststation.model;
+
+import com.example.a123.teststation.model.City;
 
 import java.util.List;
 
