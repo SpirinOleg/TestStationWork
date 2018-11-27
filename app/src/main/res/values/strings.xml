@@ -1,27 +1,30 @@
 <resources>
-    <string name="app_name">TestStation</string>
+    <string name="app_name">Расписание</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Тестовое задание</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Настройки</string>
-    <string name="about_copyright">Spirin Oleg. All right reserved (2018)</string>
+    <string name="about_copyright">Спирин Олег. Все права защищены (2018)</string>
     <string name="select_station_from">Выбор станции отправления</string>
     <string name="select_station_to">Выбор станции прибытия</string>
-    <string name="datepicker">Выбор даты</string>
+    <string name="date_picker">Выбор даты</string>
     <string name="info_station_title">Станция</string>
     <string name="info_city_title">Город</string>
     <string name="info_country_title">Страна</string>
     <string name="info_district_title">Район</string>
-    <string name="fragment_name">TimingFragment</string>
+    <string name="activity_name">Список станций</string>
+    <string name="info_name">Детальная информация</string>
     <string name="msg_error_dep">Список станций пустой</string>
     <string name="msg_error_json">Ошибка импорта json</string>
-    <string name="msg_task_complited">Задача завершена</string>
+    <string name="msg_task_done">Задача завершена</string>
     <string name="msg_task_canceled">Задача отменена</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_hint">Station title…</string>
     <string name="app_version">Версия приложения: %s</string>
     <string name="imageInfoStation">Информация о станции</string>
+    <string name="msg_error_no_data">Нет данных</string>
+    <string name="main_schedule">Расписание</string>
+    <string name="main_about">О приложении</string>
+    <string name="timing_fragment_search">Поиск</string>
+    <string name="msg_error_no_date">Ошибка выбора даты</string>
 </resources>

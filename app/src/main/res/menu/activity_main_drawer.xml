@@ -7,10 +7,8 @@
         <item
             android:id="@+id/timing"
             android:checked="true"
-            android:title="Расписание"/>
-        <item
-            android:id="@+id/about"
-            android:title="О приложении"/>
+            android:title="@string/main_schedule"/>
+        <item android:title="@string/main_about"/>
     </group>
 
 </menu>

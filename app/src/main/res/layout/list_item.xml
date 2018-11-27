@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="2dp"
-        android:src="@drawable/ic_action_name"
+        android:src="@drawable/ic_action_list"
         android:contentDescription="@string/imageInfoStation" />
 
 </LinearLayout>

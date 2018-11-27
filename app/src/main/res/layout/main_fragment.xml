@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.a123.teststation.fragments.ScheduleFragment">
+    tools:context="com.example.a123.testStation.fragments.ScheduleFragment">
 
         <EditText
             android:id="@+id/departureStationAddress"
@@ -34,15 +34,15 @@
             tools:targetApi="o" />
 
         <EditText
-            android:id="@+id/pickerdate"
+            android:id="@+id/pickerDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:focusable="false"
-            android:hint="@string/datepicker"
+            android:hint="@string/date_picker"
             android:importantForAutofill="no"
             tools:targetApi="o"
-            android:inputType="textPersonName" />
+            android:inputType="date" />
 
 
 </LinearLayout>
