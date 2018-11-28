@@ -15,7 +15,6 @@
     <string name="info_name">Детальная информация</string>
     <string name="msg_error_dep">Список станций пустой</string>
     <string name="msg_error_json">Ошибка импорта json</string>
-    <string name="msg_task_done">Задача завершена</string>
     <string name="msg_task_canceled">Задача отменена</string>
 
     <!-- TODO: Remove or change this placeholder text -->

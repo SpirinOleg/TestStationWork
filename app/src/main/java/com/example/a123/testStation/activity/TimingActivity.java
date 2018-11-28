@@ -1,13 +1,9 @@
 package com.example.a123.testStation.activity;
 
 
-import android.app.Activity;
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,17 +11,18 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.example.a123.testStation.DBUtil;
 import com.example.a123.testStation.OnItemRecyclerClick;
 import com.example.a123.testStation.R;
 import com.example.a123.testStation.adapter.TimingAdapter;
 import com.example.a123.testStation.database.DBHelper;
-import com.example.a123.testStation.database.StationSchema;
 import com.example.a123.testStation.fragments.ScheduleFragment;
 import com.example.a123.testStation.model.City;
+import com.example.a123.testStation.model.CityTable;
 import com.example.a123.testStation.model.Station;
 import com.google.gson.Gson;
 
@@ -36,7 +33,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.a123.testStation.database.StationSchema.StationTable;
+
 import static com.example.a123.testStation.fragments.ScheduleFragment.EXTRA_FLAG;
 import static com.example.a123.testStation.fragments.ScheduleFragment.EXTRA_STATION;
 
@@ -47,61 +44,8 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
     private RecyclerView recyclerView;
     private StationAsyncTask task;
     private SearchView searchView;
-    private boolean flag; //переменная булевская для преключения между списком городов отправления и прибытия
+    private boolean flagDirection; //переменная булевская для преключения между списком городов отправления и прибытия
 
-
-    private static List<Station> readDB(Context context, int from) {
-        DBHelper helper = new DBHelper(context);
-        SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
-        String[] selectionArgs = new String[1];
-        selectionArgs[0] = String.valueOf(from);
-        Cursor cursor = sqLiteDatabase.rawQuery(" SELECT * FROM " + StationTable.TABLE_NAME + " stt " + " JOIN " + StationSchema.CityTable.TABLE_NAME + " ct " +
-                " ON " + " stt. " + StationTable.Cols.CITY_ID + " = " + " ct. " + StationSchema.CityTable.Cols.CITY_ID +
-                " WHERE " + " ct. " + StationSchema.CityTable.Cols.DIRECTION_TYPE + " = ? ", selectionArgs);
-        List<Station> stations = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            Station s = new Station();
-            s.setCountryTitle(cursor.getString(cursor.getColumnIndex(StationTable.Cols.COUNTRY_TITLE)));
-            s.setCityId(cursor.getInt(cursor.getColumnIndex(StationTable.Cols.CITY_ID)));
-            s.setStationTitle(cursor.getString(cursor.getColumnIndex(StationTable.Cols.STATION_TITLE)));
-            s.setStationId(cursor.getInt(cursor.getColumnIndex(StationTable.Cols.STATION_ID)));
-            s.setDistrictTitle(cursor.getString(cursor.getColumnIndex(StationTable.Cols.DISTRICT_TITLE)));
-            s.setRegionTitle(cursor.getString(cursor.getColumnIndex(StationTable.Cols.REGION_TITLE)));
-            s.setCityId(cursor.getInt(cursor.getColumnIndex(StationSchema.CityTable.Cols.CITY_ID)));
-            s.setCountryTitle(cursor.getString(cursor.getColumnIndex(StationSchema.CityTable.Cols.COUNTRY_TITLE)));
-            s.setCityTitle(cursor.getString(cursor.getColumnIndex(StationSchema.CityTable.Cols.CITY_TITLE)));
-            stations.add(s);
-        }
-        cursor.close();
-        return stations;
-    }
-
-    private static void recCityToDB(Context context, List<City> cities, int from) {
-        DBHelper helper = new DBHelper(context);
-        SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
-        sqLiteDatabase.execSQL(" DELETE FROM " + StationSchema.CityTable.TABLE_NAME);
-        sqLiteDatabase.execSQL(" DELETE FROM " + StationSchema.StationTable.TABLE_NAME);
-
-        for (City city : cities) {
-            ContentValues valuesCity = new ContentValues();
-            valuesCity.put(StationSchema.CityTable.Cols.CITY_ID, city.getCityId());
-            valuesCity.put(StationSchema.CityTable.Cols.COUNTRY_TITLE, city.getCountryTitle());
-            valuesCity.put(StationSchema.CityTable.Cols.DIRECTION_TYPE, from);
-            valuesCity.put(StationSchema.CityTable.Cols.CITY_TITLE, city.getCityTitle());
-            sqLiteDatabase.insert(StationSchema.CityTable.TABLE_NAME, null, valuesCity);
-
-            for (Station station : city.getStations()) {
-                ContentValues valuesStation = new ContentValues();
-                valuesStation.put(StationTable.Cols.COUNTRY_TITLE, station.getCountryTitle());
-                valuesStation.put(StationTable.Cols.CITY_ID, station.getCityId());
-                valuesStation.put(StationTable.Cols.STATION_TITLE, station.getStationTitle());
-                valuesStation.put(StationTable.Cols.STATION_ID, station.getStationId());
-                valuesStation.put(StationTable.Cols.DISTRICT_TITLE, station.getDistrictTitle());
-                valuesStation.put(StationTable.Cols.REGION_TITLE, station.getRegionTitle());
-                sqLiteDatabase.insert(StationTable.TABLE_NAME, null, valuesStation);
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +59,14 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        task = new StationAsyncTask(TimingActivity.this);
+        InputStream file = getApplicationContext().getResources().openRawResource(R.raw.allstations);
+        task = new StationAsyncTask(TimingActivity.this, new DBHelper(getApplicationContext()), file);
         task.execute();
-
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             int direction = bundle.getInt(ScheduleFragment.KEY, -1);
-            flag = direction == ScheduleFragment.DIRECTION_DEP;
+            flagDirection = direction == ScheduleFragment.DIRECTION_DEP;
         }
     }
 
@@ -181,7 +125,7 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
     public void onClick(Station station) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_STATION, station);
-        intent.putExtra(EXTRA_FLAG, flag);
+        intent.putExtra(EXTRA_FLAG, flagDirection);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -194,9 +138,14 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
 
     private static class StationAsyncTask extends AsyncTask<String, Integer, List<Station>> {
         private final WeakReference<TimingActivity> weakReference;
+        private final DBHelper helper;
+        private final InputStream file;
 
-        private StationAsyncTask(TimingActivity activity){
+
+        private StationAsyncTask(TimingActivity activity, DBHelper helper, InputStream file){
             weakReference = new WeakReference<>(activity);
+            this.helper = helper;
+            this.file = file;
         }
 
         @Override
@@ -204,38 +153,28 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
             List<Station> allStations = new ArrayList<>();
 
             try {
-                InputStream file = weakReference.get().getApplicationContext().getResources().openRawResource(R.raw.allstations);
                 BufferedReader rd = new BufferedReader(new InputStreamReader(file));
                 Gson gson = new Gson();
-                com.example.a123.testStation.model.CityTable cityTable = gson.fromJson(rd, com.example.a123.testStation.model.CityTable.class);
+                CityTable cityTable = gson.fromJson(rd, CityTable.class);
                 List<City> cities;
 
-                DBHelper helper = new DBHelper(weakReference.get().getApplicationContext());
-                SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
-                Cursor cursor = sqLiteDatabase.query("city",
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
-                if (!cursor.moveToFirst()) {
+                if (!DBUtil.selectCity(helper).moveToFirst()) {
                     cities = cityTable.getCitiesFrom();
-                    recCityToDB(weakReference.get().getApplicationContext(), cities, 0);
+                    DBUtil.recCityToDB(helper, cities, 0);
                     cities = cityTable.getCitiesTo();
-                    recCityToDB(weakReference.get().getApplicationContext(), cities, 1);
+                    DBUtil.recCityToDB(helper, cities, 1);
                     for (City city : cities) {
                         allStations.addAll(city.getStations());
                     }
                 } else {
-                    allStations = readDB(weakReference.get().getApplicationContext(), 0);
-                    allStations = readDB(weakReference.get().getApplicationContext(), 1);
+                    allStations = DBUtil.readDB(helper, 0);
+                    allStations = DBUtil.readDB(helper, 1);
 
                 }
-                cursor.close();
-                sqLiteDatabase.close();
+                DBUtil.selectCity(helper).close();
             } catch (Exception e) {
-                weakReference.get().runOnUiThread(() -> toast(R.string.msg_error_json));
+                Log.d("AsyncTask", String.valueOf(R.string.msg_error_json));
+
             }
             return allStations;
         }
@@ -248,23 +187,21 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
         @Override
         protected void onPostExecute(List<Station> stations) {
             super.onPostExecute(stations);
-            weakReference.get().adapter = new TimingAdapter(stations, weakReference.get());
-            //adapter = new TimingAdapter(stations, TimingActivity.this);
-            weakReference.get().recyclerView.setAdapter(weakReference.get().adapter);
-            toast(R.string.msg_task_done);
+            TimingActivity ti = weakReference.get();
+            if(!ti.isFinishing() || !ti.isDestroyed()){
+                ti.adapter = new TimingAdapter(stations, ti);
+                //adapter = new TimingAdapter(stations, TimingActivity.this);
+                ti.recyclerView.setAdapter(ti.adapter);
+            } else {
+                Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
+            }
         }
 
         @Override
         protected void onCancelled() {
-            toast(R.string.msg_task_canceled);
+            Log.d("PostExecute", String.valueOf(R.string.msg_task_canceled));
             super.onCancelled();
         }
 
-        private void toast(int message) {
-            Activity activity = weakReference.get();
-            if (!activity.isFinishing() && !activity.isDestroyed()) {
-                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }
