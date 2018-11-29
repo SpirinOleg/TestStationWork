@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.a123.testStation.Direction;
 import com.example.a123.testStation.R;
 import com.example.a123.testStation.activity.TimingActivity;
 import com.example.a123.testStation.model.Station;
@@ -27,8 +28,8 @@ public class ScheduleFragment extends Fragment {
 
     public static final String FRAGMENT_TAG = "ScheduleFragment";
     public static final String KEY = "DIRECTION_EXTRA";
-    public static final int DIRECTION_DEP = 0;//отправление
-    public static final int DIRECTION_ARR = 1;//прибытие
+//    public static final int DIRECTION_DEP = 0;//отправление
+//    public static final int DIRECTION_ARR = 1;//прибытие
     public static final String EXTRA_STATION = "STATION";
     public static final String EXTRA_FLAG = "FLAG";
     private static final int DIRECTION_TYPE = 1;
@@ -53,9 +54,9 @@ public class ScheduleFragment extends Fragment {
         datePicker = view.findViewById(R.id.pickerDate);
 
 
-        departureStation.setOnClickListener(view1 -> showStation(0));
+        departureStation.setOnClickListener(view1 -> showStation(Direction.FROM));
 
-        arrivalStation.setOnClickListener(view12 -> showStation(1));
+        arrivalStation.setOnClickListener(view12 -> showStation(Direction.TO));
 
         datePicker.setOnClickListener(view13 -> selectDate());
 
@@ -81,15 +82,11 @@ public class ScheduleFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showStation(int flag) {
+    private void showStation(Direction d) {
+
         Intent intent = new Intent(getActivity(), TimingActivity.class);
-        if (flag == 0) {
-            intent.putExtra(KEY, 0);
-        } else if (flag == 1) {
-            intent.putExtra(KEY, 1);
-        } else {
-            Toast.makeText(getContext(), R.string.msg_error_dep, Toast.LENGTH_SHORT).show();
-        }
+        intent.putExtra(KEY, d.name());
+//        intent.putExtra(KEY, d.getSqlValue());
         startActivityForResult(intent, DIRECTION_TYPE);
     }
 

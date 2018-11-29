@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.a123.testStation.DBUtil;
+import com.example.a123.testStation.Direction;
 import com.example.a123.testStation.OnItemRecyclerClick;
 import com.example.a123.testStation.R;
 import com.example.a123.testStation.adapter.TimingAdapter;
@@ -36,6 +37,7 @@ import java.util.List;
 
 import static com.example.a123.testStation.fragments.ScheduleFragment.EXTRA_FLAG;
 import static com.example.a123.testStation.fragments.ScheduleFragment.EXTRA_STATION;
+import static com.example.a123.testStation.fragments.ScheduleFragment.KEY;
 
 
 public class TimingActivity extends AppCompatActivity implements OnItemRecyclerClick {
@@ -66,7 +68,9 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             int direction = bundle.getInt(ScheduleFragment.KEY, -1);
-            flagDirection = direction == ScheduleFragment.DIRECTION_DEP;
+//            if (direction == ScheduleFragment.DIRECTION_DEP) flagDirection = true;
+//            else flagDirection = false;
+            flagDirection = direction == Direction.FROM.getSqlValue();
         }
     }
 
@@ -160,15 +164,19 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
 
                 if (!DBUtil.selectCity(helper).moveToFirst()) {
                     cities = cityTable.getCitiesFrom();
-                    DBUtil.recCityToDB(helper, cities, 0);
+//                    DBUtil.recCityToDB(helper, cities, 0);
+                    DBUtil.recCityToDB(helper, cities, Direction.FROM.getSqlValue());
                     cities = cityTable.getCitiesTo();
-                    DBUtil.recCityToDB(helper, cities, 1);
+//                    DBUtil.recCityToDB(helper, cities, 1);
+                    DBUtil.recCityToDB(helper, cities, Direction.TO.getSqlValue());
                     for (City city : cities) {
                         allStations.addAll(city.getStations());
                     }
                 } else {
-                    allStations = DBUtil.readDB(helper, 0);
-                    allStations = DBUtil.readDB(helper, 1);
+//                    allStations = DBUtil.readDB(helper, 0);
+                    allStations = DBUtil.readDB(helper, Direction.FROM.getSqlValue());
+//                    allStations = DBUtil.readDB(helper, 1);
+                    allStations = DBUtil.readDB(helper, Direction.TO.getSqlValue());
 
                 }
                 DBUtil.selectCity(helper).close();
@@ -180,19 +188,17 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
         protected void onPostExecute(List<Station> stations) {
+            if(!(stations == null)){
             super.onPostExecute(stations);
             TimingActivity ti = weakReference.get();
             if(!ti.isFinishing() || !ti.isDestroyed()){
                 ti.adapter = new TimingAdapter(stations, ti);
-                //adapter = new TimingAdapter(stations, TimingActivity.this);
                 ti.recyclerView.setAdapter(ti.adapter);
             } else {
+                Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
+                    }
+            }  else {
                 Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
             }
         }
