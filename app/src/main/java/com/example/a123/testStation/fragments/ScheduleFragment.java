@@ -28,8 +28,6 @@ public class ScheduleFragment extends Fragment {
 
     public static final String FRAGMENT_TAG = "ScheduleFragment";
     public static final String KEY = "DIRECTION_EXTRA";
-//    public static final int DIRECTION_DEP = 0;//отправление
-//    public static final int DIRECTION_ARR = 1;//прибытие
     public static final String EXTRA_STATION = "STATION";
     public static final String EXTRA_FLAG = "FLAG";
     private static final int DIRECTION_TYPE = 1;
@@ -53,7 +51,6 @@ public class ScheduleFragment extends Fragment {
         arrivalStation = view.findViewById(R.id.arrivalStationAddress);
         datePicker = view.findViewById(R.id.pickerDate);
 
-
         departureStation.setOnClickListener(view1 -> showStation(Direction.FROM));
 
         arrivalStation.setOnClickListener(view12 -> showStation(Direction.TO));
@@ -68,8 +65,8 @@ public class ScheduleFragment extends Fragment {
         if (requestCode == DIRECTION_TYPE) {
             if (resultCode == RESULT_OK) {
                 Station station = data.getParcelableExtra(EXTRA_STATION);
-                boolean flag = data.getBooleanExtra(EXTRA_FLAG, false);
-                if (flag) {
+                Direction flag = Direction.valueOf(data.getStringExtra(EXTRA_FLAG));
+                if (flag == Direction.FROM) {
                     departureStation.setText(station.getStationTitle());
                 } else {
                     arrivalStation.setText(station.getStationTitle());
@@ -83,10 +80,8 @@ public class ScheduleFragment extends Fragment {
     }
 
     private void showStation(Direction d) {
-
         Intent intent = new Intent(getActivity(), TimingActivity.class);
         intent.putExtra(KEY, d.name());
-//        intent.putExtra(KEY, d.getSqlValue());
         startActivityForResult(intent, DIRECTION_TYPE);
     }
 

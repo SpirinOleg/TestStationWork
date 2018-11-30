@@ -21,7 +21,6 @@ import com.example.a123.testStation.OnItemRecyclerClick;
 import com.example.a123.testStation.R;
 import com.example.a123.testStation.adapter.TimingAdapter;
 import com.example.a123.testStation.database.DBHelper;
-import com.example.a123.testStation.fragments.ScheduleFragment;
 import com.example.a123.testStation.model.City;
 import com.example.a123.testStation.model.CityTable;
 import com.example.a123.testStation.model.Station;
@@ -46,7 +45,7 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
     private RecyclerView recyclerView;
     private StationAsyncTask task;
     private SearchView searchView;
-    private boolean flagDirection; //переменная булевская для преключения между списком городов отправления и прибытия
+    private Direction flagDirection; //переменная булевская для преключения между списком городов отправления и прибытия
 
 
     @Override
@@ -65,12 +64,11 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
         task = new StationAsyncTask(TimingActivity.this, new DBHelper(getApplicationContext()), file);
         task.execute();
 
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            int direction = bundle.getInt(ScheduleFragment.KEY, -1);
-//            if (direction == ScheduleFragment.DIRECTION_DEP) flagDirection = true;
-//            else flagDirection = false;
-            flagDirection = direction == Direction.FROM.getSqlValue();
+            
+              flagDirection = Direction.valueOf(bundle.getString(KEY));
         }
     }
 
@@ -129,7 +127,7 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
     public void onClick(Station station) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_STATION, station);
-        intent.putExtra(EXTRA_FLAG, flagDirection);
+        intent.putExtra(EXTRA_FLAG, flagDirection.name());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -164,18 +162,14 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
 
                 if (!DBUtil.selectCity(helper).moveToFirst()) {
                     cities = cityTable.getCitiesFrom();
-//                    DBUtil.recCityToDB(helper, cities, 0);
                     DBUtil.recCityToDB(helper, cities, Direction.FROM.getSqlValue());
                     cities = cityTable.getCitiesTo();
-//                    DBUtil.recCityToDB(helper, cities, 1);
                     DBUtil.recCityToDB(helper, cities, Direction.TO.getSqlValue());
                     for (City city : cities) {
                         allStations.addAll(city.getStations());
                     }
                 } else {
-//                    allStations = DBUtil.readDB(helper, 0);
                     allStations = DBUtil.readDB(helper, Direction.FROM.getSqlValue());
-//                    allStations = DBUtil.readDB(helper, 1);
                     allStations = DBUtil.readDB(helper, Direction.TO.getSqlValue());
 
                 }
