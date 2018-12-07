@@ -1,9 +1,12 @@
 package com.example.a123.testStation.activity;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,15 +42,29 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().performIdentifierAction(R.id.timing, 0);
+
+
+
+//        navigationView.setNavigationItemSelectedListener(this);
+//        navigationView.getMenu().performIdentifierAction(R.id.timing, 0);
+
+        if(savedInstanceState == null){
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.getMenu().performIdentifierAction(R.id.timing, 0);
+//            setTitle(navigationView.getCheckedItem().getTitle());
+//            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new ScheduleFragment(), ScheduleFragment.FRAGMENT_TAG).commit();
+        }
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+
         int id = item.getItemId();
+        item.setChecked(true);
+        setTitle(item.getTitle());
         if (selectedItem != id) {
             if (id == R.id.timing) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new ScheduleFragment(), ScheduleFragment.FRAGMENT_TAG).commit();
@@ -55,9 +74,9 @@ public class MainActivity extends AppCompatActivity
             selectedItem = id;
         }
 
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
-
     }
 
     @Override
@@ -67,4 +86,16 @@ public class MainActivity extends AppCompatActivity
             ((ScheduleFragment) fragment).setDate(calendar);
         }
     }
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString("Title", getTitle().toString());
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        setTitle(savedInstanceState.getString("Title"));
+//    }
 }

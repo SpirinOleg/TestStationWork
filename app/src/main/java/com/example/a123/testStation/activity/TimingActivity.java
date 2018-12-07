@@ -60,17 +60,17 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        InputStream file = getApplicationContext().getResources().openRawResource(R.raw.allstations);
-        task = new StationAsyncTask(TimingActivity.this, new DBHelper(getApplicationContext()), file);
-        task.execute();
-
-
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            
-              flagDirection = Direction.valueOf(bundle.getString(KEY));
+            flagDirection = Direction.valueOf(bundle.getString(KEY));
         }
+
+        InputStream file = getApplicationContext().getResources().openRawResource(R.raw.allstations);
+        task = new StationAsyncTask(TimingActivity.this, new DBHelper(getApplicationContext()), file, flagDirection);
+        task.execute();
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,12 +142,14 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
         private final WeakReference<TimingActivity> weakReference;
         private final DBHelper helper;
         private final InputStream file;
+        private int flagDirection;
 
 
-        private StationAsyncTask(TimingActivity activity, DBHelper helper, InputStream file){
+        private StationAsyncTask(TimingActivity activity, DBHelper helper, InputStream file, Direction flagDirection) {
             weakReference = new WeakReference<>(activity);
             this.helper = helper;
             this.file = file;
+            this.flagDirection = flagDirection.getSqlValue();
         }
 
         @Override
@@ -155,46 +157,46 @@ public class TimingActivity extends AppCompatActivity implements OnItemRecyclerC
             List<Station> allStations = new ArrayList<>();
 
             try {
-                BufferedReader rd = new BufferedReader(new InputStreamReader(file));
-                Gson gson = new Gson();
-                CityTable cityTable = gson.fromJson(rd, CityTable.class);
-                List<City> cities;
+                if (!DBUtil.selectCityFrom(helper).moveToFirst()) {
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(file));
+                    Gson gson = new Gson();
+                    CityTable cityTable = gson.fromJson(rd, CityTable.class);
 
-                if (!DBUtil.selectCity(helper).moveToFirst()) {
-                    cities = cityTable.getCitiesFrom();
-                    DBUtil.recCityToDB(helper, cities, Direction.FROM.getSqlValue());
-                    cities = cityTable.getCitiesTo();
-                    DBUtil.recCityToDB(helper, cities, Direction.TO.getSqlValue());
-                    for (City city : cities) {
-                        allStations.addAll(city.getStations());
+                    DBUtil.recCityToDB(helper, cityTable.getCitiesFrom(), Direction.FROM.getSqlValue());
+                    DBUtil.recCityToDB(helper, cityTable.getCitiesTo(), Direction.TO.getSqlValue());
+                    if (flagDirection == Direction.FROM.getSqlValue()) {
+                        for (City city : cityTable.getCitiesFrom()) {
+                            allStations.addAll(city.getStations());
+                        }
+                    } else {
+                        for (City city : cityTable.getCitiesTo()) {
+                            allStations.addAll(city.getStations());
+                        }
                     }
-                } else {
-                    allStations = DBUtil.readDB(helper, Direction.FROM.getSqlValue());
-                    allStations = DBUtil.readDB(helper, Direction.TO.getSqlValue());
 
+                } else {
+                    allStations = DBUtil.readDB(helper, flagDirection);
                 }
-                DBUtil.selectCity(helper).close();
             } catch (Exception e) {
                 Log.d("AsyncTask", String.valueOf(R.string.msg_error_json));
-
             }
             return allStations;
         }
 
         @Override
         protected void onPostExecute(List<Station> stations) {
-            if(!(stations == null)){
-            super.onPostExecute(stations);
-            TimingActivity ti = weakReference.get();
-            if(!ti.isFinishing() || !ti.isDestroyed()){
-                ti.adapter = new TimingAdapter(stations, ti);
-                ti.recyclerView.setAdapter(ti.adapter);
-            } else {
-                Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
+                super.onPostExecute(stations);
+                TimingActivity ti = weakReference.get();
+                if (ti != null) {
+                    if (!ti.isFinishing() || !ti.isDestroyed()) {
+                        ti.adapter = new TimingAdapter(stations, ti);
+                        ti.recyclerView.setAdapter(ti.adapter);
+                    } else {
+                        Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
                     }
-            }  else {
-                Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
-            }
+                } else {
+                    Log.d("PostExecute", String.valueOf(R.string.msg_error_json));
+                }
         }
 
         @Override

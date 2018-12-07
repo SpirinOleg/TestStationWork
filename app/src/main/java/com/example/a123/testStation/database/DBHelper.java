@@ -16,6 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
             StationSchema.StationTable.Cols.STATION_ID + " INTEGER, " +
             StationSchema.StationTable.Cols.DISTRICT_TITLE + " TEXT, " +
             StationSchema.StationTable.Cols.REGION_TITLE + " TEXT, " +
+            "CONSTRAINT name_unique UNIQUE (" + StationSchema.StationTable.Cols.STATION_ID + "), " +
             "FOREIGN KEY (" + StationSchema.StationTable.Cols.CITY_ID + ") REFERENCES " + StationSchema.CityTable.TABLE_NAME + "  ( " + StationSchema.CityTable.Cols.CITY_ID + " )) ";
 
     private static final String SQL_CREATE_TABLE_CITY = " CREATE TABLE " + StationSchema.CityTable.TABLE_NAME + " ( " +
@@ -23,8 +24,9 @@ public class DBHelper extends SQLiteOpenHelper {
             StationSchema.CityTable.Cols.CITY_ID + " INTEGER, " +
             StationSchema.CityTable.Cols.COUNTRY_TITLE + " TEXT, " +
             StationSchema.CityTable.Cols.DIRECTION_TYPE + " INTEGER, " +
-            StationSchema.CityTable.Cols.CITY_TITLE + " TEXT " +
-            " ) ";
+            StationSchema.CityTable.Cols.CITY_TITLE + " TEXT, " +
+            "CONSTRAINT name_unique UNIQUE (" + StationSchema.CityTable.Cols.CITY_ID +
+            " )) ";
 
 
     public DBHelper(Context context) {

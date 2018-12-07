@@ -41,9 +41,6 @@ public class DBUtil {
 
     public static void recCityToDB(DBHelper helper, List<City> cities, int from) {
         SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
-        sqLiteDatabase.execSQL(" DELETE FROM " + StationSchema.CityTable.TABLE_NAME);
-        sqLiteDatabase.execSQL(" DELETE FROM " + StationSchema.StationTable.TABLE_NAME);
-
         for (City city : cities) {
             ContentValues valuesCity = new ContentValues();
             valuesCity.put(StationSchema.CityTable.Cols.CITY_ID, city.getCityId());
@@ -65,15 +62,51 @@ public class DBUtil {
         }
     }
 
-    public static Cursor selectCity(DBHelper helper) {
+    public static Cursor selectCityFrom(DBHelper helper) {
 
         SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
         return sqLiteDatabase.query("city",
-                null,
-                null,
-                null,
+                new String[] {"direction_type"},
+                "direction_type = ?",
+                new String[] {Integer.toString(0)},
                 null,
                 null,
                 null);
+    }
+
+    public static Cursor selectCityTo(DBHelper helper) {
+
+        SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
+        return sqLiteDatabase.query("city",
+                new String[] {"direction_type"},
+                "direction_type = ?",
+                new String[] {Integer.toString(1)},
+                null,
+                null,
+                null);
+    }
+
+    public static void delDB(DBHelper helper, int from){
+        SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(from);
+        Cursor cursor = sqLiteDatabase.rawQuery(" DELETE FROM  " + StationSchema.StationTable.TABLE_NAME + " WHERE "
+                + StationSchema.StationTable.Cols.STATION_ID + " IN " +
+                "( SELECT stt. " + StationSchema.StationTable.Cols.STATION_ID + " FROM " + StationSchema.StationTable.TABLE_NAME + " stt " + " JOIN " + StationSchema.CityTable.TABLE_NAME + " ct " +
+                " ON " + " stt. " + StationSchema.StationTable.Cols.CITY_ID + " = " + " ct. " + StationSchema.CityTable.Cols.CITY_ID +
+                " WHERE " + " ct. " + StationSchema.CityTable.Cols.DIRECTION_TYPE + " = ? )", selectionArgs);
+        while (cursor.moveToNext()) {
+            Station s = new Station();
+            s.setCountryTitle(cursor.getString(cursor.getColumnIndex(StationSchema.StationTable.Cols.COUNTRY_TITLE)));
+            s.setCityId(cursor.getInt(cursor.getColumnIndex(StationSchema.StationTable.Cols.CITY_ID)));
+            s.setStationTitle(cursor.getString(cursor.getColumnIndex(StationSchema.StationTable.Cols.STATION_TITLE)));
+            s.setStationId(cursor.getInt(cursor.getColumnIndex(StationSchema.StationTable.Cols.STATION_ID)));
+            s.setDistrictTitle(cursor.getString(cursor.getColumnIndex(StationSchema.StationTable.Cols.DISTRICT_TITLE)));
+            s.setRegionTitle(cursor.getString(cursor.getColumnIndex(StationSchema.StationTable.Cols.REGION_TITLE)));
+            s.setCityId(cursor.getInt(cursor.getColumnIndex(StationSchema.CityTable.Cols.CITY_ID)));
+            s.setCountryTitle(cursor.getString(cursor.getColumnIndex(StationSchema.CityTable.Cols.COUNTRY_TITLE)));
+            s.setCityTitle(cursor.getString(cursor.getColumnIndex(StationSchema.CityTable.Cols.CITY_TITLE)));
+        }
+        cursor.close();
     }
 }

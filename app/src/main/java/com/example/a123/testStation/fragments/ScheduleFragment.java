@@ -35,6 +35,11 @@ public class ScheduleFragment extends Fragment {
     private EditText arrivalStation;
     private EditText datePicker;
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setRetainInstance(false);
+//    }
 
     @Nullable
     @Override

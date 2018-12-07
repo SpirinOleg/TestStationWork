@@ -14,6 +14,12 @@ import com.example.a123.testStation.R;
 
 public class AboutFragment extends Fragment {
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setRetainInstance(true);
+//    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,4 +32,6 @@ public class AboutFragment extends Fragment {
         TextView tvInfo = view.findViewById(R.id.txt_version);
         tvInfo.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME));
     }
+
+
 }

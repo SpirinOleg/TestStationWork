@@ -44,5 +44,4 @@
             tools:targetApi="o"
             android:inputType="date" />
 
-
 </LinearLayout>
