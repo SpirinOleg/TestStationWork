@@ -62,7 +62,7 @@ public class DBUtil {
         }
     }
 
-    public static Cursor selectCityFrom(DBHelper helper) {
+    public static Cursor selectCity(DBHelper helper) {
 
         SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
         return sqLiteDatabase.query("city",
@@ -74,17 +74,17 @@ public class DBUtil {
                 null);
     }
 
-    public static Cursor selectCityTo(DBHelper helper) {
-
-        SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
-        return sqLiteDatabase.query("city",
-                new String[] {"direction_type"},
-                "direction_type = ?",
-                new String[] {Integer.toString(1)},
-                null,
-                null,
-                null);
-    }
+//    public static Cursor selectCityTo(DBHelper helper) {
+//
+//        SQLiteDatabase sqLiteDatabase = helper.getReadableDatabase();
+//        return sqLiteDatabase.query("city",
+//                new String[] {"direction_type"},
+//                "direction_type = ?",
+//                new String[] {Integer.toString(1)},
+//                null,
+//                null,
+//                null);
+//    }
 
     public static void delDB(DBHelper helper, int from){
         SQLiteDatabase sqLiteDatabase = helper.getWritableDatabase();

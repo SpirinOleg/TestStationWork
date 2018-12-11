@@ -20,15 +20,21 @@ import java.util.List;
 
 public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder> implements Filterable {
 
-    private final List<Station> stations;
     private final OnItemRecyclerClick listener;
+    private List<Station> stations;
     private List<Station> stationsFilter;
 
 
-    public TimingAdapter(List<Station> data, OnItemRecyclerClick listener) {
+    public TimingAdapter(OnItemRecyclerClick listener) {
+        stations = new ArrayList<>();
+        stationsFilter = new ArrayList<>();
+        this.listener = listener;
+    }
+
+    public void setData(List<Station> data) {
         stations = data;
         stationsFilter = data;
-        this.listener = listener;
+        notifyDataSetChanged();
     }
 
 
@@ -99,7 +105,6 @@ public class TimingAdapter extends RecyclerView.Adapter<TimingAdapter.ViewHolder
             }
         };
     }
-
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {

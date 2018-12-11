@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.a123.testStation.R;
@@ -42,25 +43,22 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-
-
-//        navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 //        navigationView.getMenu().performIdentifierAction(R.id.timing, 0);
 
         if(savedInstanceState == null){
-            NavigationView navigationView = findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+
             navigationView.getMenu().performIdentifierAction(R.id.timing, 0);
-//            setTitle(navigationView.getCheckedItem().getTitle());
-//            getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new ScheduleFragment(), ScheduleFragment.FRAGMENT_TAG).commit();
+            //setTitle(navigationView.getCheckedItem().getTitle());
+            //getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new ScheduleFragment(), ScheduleFragment.FRAGMENT_TAG).commit();
         }
     }
 
 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
 
         int id = item.getItemId();
         item.setChecked(true);
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity
             }
             selectedItem = id;
         }
-
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
